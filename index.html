@@ -930,7 +930,7 @@
 <!-- ═══════════════════════════════════════════════════
      LIGHTBOX
 ════════════════════════════════════════════════════ -->
-<div id="lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex items-center justify-center p-4">
+<div id="lightbox" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4">
   <button id="lb-close" aria-label="Close" class="absolute top-5 right-5 text-white hover:text-accent w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
   </button>
@@ -946,10 +946,18 @@
 <!-- ═══════════════════════════════════════════════════
      SCRIPTS
 ════════════════════════════════════════════════════ -->
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js" onerror="document.querySelectorAll('[data-aos]').forEach(el=>{el.style.opacity='1';el.style.transform='none';})"></script>
 <script>
-  // Init AOS (once: false ensures animations replay as user scrolls up and down)
-  AOS.init({ duration: 700, once: false, offset: 60 });
+  // Init AOS — with safety fallback if library didn't load
+  if (typeof AOS !== 'undefined') {
+    AOS.init({ duration: 700, once: false, offset: 60 });
+  } else {
+    // AOS failed to load — force all animated elements visible
+    document.querySelectorAll('[data-aos]').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+  }
 
   // Navbar scroll shadow
   const navbar = document.getElementById('navbar');
